@@ -8,4 +8,7 @@
 /src/preload.php
 /var/
 /vendor/
+/docker/database/data
+/docker/nginx/logs
+
 ###< symfony/framework-bundle ###
