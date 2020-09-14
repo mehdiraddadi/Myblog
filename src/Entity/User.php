@@ -50,11 +50,23 @@ class User implements UserInterface, \Serializable
      */
     private $formations;
 
+    /**
+     * @ORM\OneToMany (targetEntity="App\Entity\Experience", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     */
+    private $experiences;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Competance::class, inversedBy="users")
+     */
+    private $competances;
+
     public function __construct()
     {
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
         $this->formations = new ArrayCollection();
+        $this->experiences = new ArrayCollection();
+        $this->competances = new ArrayCollection();
     }
 
     /**
@@ -172,7 +184,7 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
-    public function removePicture(Formation $formation): self
+    public function removeFormation(Formation $formation): self
     {
         if ($this->formations->contains($formation)) {
             $this->formations->removeElement($formation);
@@ -180,6 +192,65 @@ class User implements UserInterface, \Serializable
             if ($formation->getUser() === $this) {
                 $formation->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getExperiences(): Collection
+    {
+        return $this->experiences;
+    }
+
+    public function addExperience(Experience $experience): self
+    {
+        if (!$this->experiences->contains($experience)) {
+            $this->experiences[] = $experience;
+            $experience->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExperience(Experience $experience): self
+    {
+        if ($this->experiences->contains($experience)) {
+            $this->experiences->removeElement($experience);
+            // set the owning side to null (unless already changed)
+            if ($experience->getUser() === $this) {
+                $experience->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Competance[]
+     */
+    public function getCompetances(): Collection
+    {
+        return $this->competances;
+    }
+
+    public function addCompetance(Competance $competance): self
+    {
+        if (!$this->competances->contains($competance)) {
+            $this->competances[] = $competance;
+            $competance->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetance(Competance $competance): self
+    {
+        if ($this->competances->contains($competance)) {
+            $this->competances->removeElement($competance);
+            $competance->removeUser($this);
         }
 
         return $this;
