@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FormationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=FormationRepository::class)
@@ -14,27 +15,32 @@ class Formation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"user", "formation"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "formation"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "formation"})
      */
     private $establishment;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user", "formation"})
      */
     private $dateObtained;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="formations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"user", "formation"})
      */
     private $user;
 

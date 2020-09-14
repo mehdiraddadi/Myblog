@@ -38,7 +38,7 @@ class Experience
     private $end_date;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="experience")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="experiences")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;

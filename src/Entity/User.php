@@ -3,10 +3,10 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -20,12 +20,15 @@ class User implements UserInterface, \Serializable
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"user"})
+     * @Groups({"user", "auth-token"})
      */
     private $id;
 
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "auth-token"})
      */
     private $username;
 
@@ -35,36 +38,43 @@ class User implements UserInterface, \Serializable
      */
     private $password;
 
+    private $plainPassword;
+
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user", "auth-token"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"user", "auth-token"})
      */
     private $updated_at;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Formation", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"user", "formation"})
      */
     private $formations;
 
     /**
      * @ORM\OneToMany (targetEntity="App\Entity\Experience", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"user", "auth-token"})
      */
     private $experiences;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Competance::class, inversedBy="users")
+     * @ORM\OneToMany(targetEntity="App\Entity\Competance", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"user", "auth-token", "competance"})
      */
     private $competances;
 
     public function __construct()
     {
-        $this->created_at = new \DateTime();
-        $this->updated_at = new \DateTime();
-        $this->formations = new ArrayCollection();
+        $this->created_at  = new \DateTime();
+        $this->updated_at  = new \DateTime();
+        $this->formations  = new ArrayCollection();
         $this->experiences = new ArrayCollection();
         $this->competances = new ArrayCollection();
     }
@@ -93,6 +103,22 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * @param mixed $plainPassword
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
+    }
+
     public function getSalt(): ?string
     {
         return null;
@@ -111,7 +137,8 @@ class User implements UserInterface, \Serializable
 
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
+        // Suppression des données sensibles
+        $this->plainPassword = null;
     }
 
     public function serialize()
@@ -169,11 +196,15 @@ class User implements UserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getFormations(): Collection
+    public function getFormations(): ArrayCollection
     {
         return $this->formations;
     }
 
+    /**
+     * @param Formation $formation
+     * @return $this
+     */
     public function addFormation(Formation $formation): self
     {
         if (!$this->formations->contains($formation)) {
@@ -184,6 +215,10 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @param Formation $formation
+     * @return $this
+     */
     public function removeFormation(Formation $formation): self
     {
         if ($this->formations->contains($formation)) {
@@ -200,11 +235,15 @@ class User implements UserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getExperiences(): Collection
+    public function getExperiences(): ArrayCollection
     {
         return $this->experiences;
     }
 
+    /**
+     * @param Experience $experience
+     * @return $this
+     */
     public function addExperience(Experience $experience): self
     {
         if (!$this->experiences->contains($experience)) {
@@ -215,6 +254,10 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @param Experience $experience
+     * @return $this
+     */
     public function removeExperience(Experience $experience): self
     {
         if ($this->experiences->contains($experience)) {
@@ -229,32 +272,42 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @return Collection|Competance[]
+     * @return ArrayCollection
      */
-    public function getCompetances(): Collection
+    public function getCompetances(): ArrayCollection
     {
         return $this->competances;
     }
 
+    /**
+     * @param Competance $competance
+     * @return $this
+     */
     public function addCompetance(Competance $competance): self
     {
         if (!$this->competances->contains($competance)) {
             $this->competances[] = $competance;
-            $competance->addUser($this);
+            $competance->setUser($this);
         }
 
         return $this;
     }
 
+    /**
+     * @param Competance $competance
+     * @return $this
+     */
     public function removeCompetance(Competance $competance): self
     {
         if ($this->competances->contains($competance)) {
             $this->competances->removeElement($competance);
-            $competance->removeUser($this);
+            // set the owning side to null (unless already changed)
+            if ($competance->getUser() === $this) {
+                $competance->setUser(null);
+            }
         }
 
         return $this;
     }
-
 
 }
