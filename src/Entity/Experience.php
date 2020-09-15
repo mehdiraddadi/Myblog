@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ExperienceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ExperienceRepository::class)
@@ -14,26 +15,31 @@ class Experience
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"exprience", "auth-token"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"exprience", "auth-token"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"exprience", "auth-token"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"exprience", "auth-token"})
      */
     private $start_date;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Groups({"exprience", "auth-token"})
      */
     private $end_date;
 

@@ -68,7 +68,6 @@ class AuthTokenController extends AbstractFOSRestController
         if(!$user) {
             return $this->invalidCredentials();
         }
-
         $isPasswordValid = $this->encoder->isPasswordValid($user, $credentials->getPassword());
         if(!$isPasswordValid){
             return $this->invalidCredentials();
@@ -83,24 +82,6 @@ class AuthTokenController extends AbstractFOSRestController
         $this->em->flush();
 
         return $authToken;
-    }
-
-    /**
-     * @param Request $request
-     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
-     * @Rest\Get("/user/{username}")
-     * @return View
-     */
-    public function getUserConnect($username)
-    {
-        $user = $this->userRepository->findOneBy(['username' => $username]);
-        dump($user);die;
-        if(!$user) {
-            return $this->invalidCredentials();
-        }
-
-
-        return $user;
     }
 
     /**

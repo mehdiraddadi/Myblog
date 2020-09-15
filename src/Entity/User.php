@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -54,13 +55,13 @@ class User implements UserInterface, \Serializable
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Formation", mappedBy="user", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"user", "formation"})
+     * @Groups({"user", "auth-token", "formation"})
      */
     private $formations;
 
     /**
      * @ORM\OneToMany (targetEntity="App\Entity\Experience", mappedBy="user", orphanRemoval=true, cascade={"persist"})
-     * @Groups({"user", "auth-token"})
+     * @Groups({"user", "auth-token", "experience"})
      */
     private $experiences;
 
@@ -196,7 +197,7 @@ class User implements UserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getFormations(): ArrayCollection
+    public function getFormations(): Collection
     {
         return $this->formations;
     }
@@ -235,7 +236,7 @@ class User implements UserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getExperiences(): ArrayCollection
+    public function getExperiences(): Collection
     {
         return $this->experiences;
     }
@@ -274,7 +275,7 @@ class User implements UserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getCompetances(): ArrayCollection
+    public function getCompetances(): Collection
     {
         return $this->competances;
     }

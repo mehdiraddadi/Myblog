@@ -15,32 +15,31 @@ class Formation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"user", "formation"})
+     * @Groups({"formation", "auth-token"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user", "formation"})
+     * @Groups({"formation", "auth-token"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user", "formation"})
+     * @Groups({"formation", "auth-token"})
      */
     private $establishment;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"user", "formation"})
+     * @Groups({"formation", "auth-token"})
      */
     private $dateObtained;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="formations")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"user", "formation"})
      */
     private $user;
 

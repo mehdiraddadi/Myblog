@@ -16,17 +16,19 @@ class Competance
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"competance", "auth-token"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"competance", "auth-token"})
      */
     private $name;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="competances")
-     * @Groups({"user", "competance"})
+     * @Groups({"competance"})
      */
     private $user;
 
