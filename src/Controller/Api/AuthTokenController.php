@@ -3,13 +3,9 @@ namespace App\Controller\Api;
 
 use App\Entity\AuthToken;
 use App\Entity\Credentials;
-use App\Entity\User;
 use App\Form\Type\CredentialsType;
-use App\Form\Type\LoginFormType;
-use App\Repository\PropertyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

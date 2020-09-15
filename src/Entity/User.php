@@ -34,10 +34,47 @@ class User implements UserInterface, \Serializable
     private $username;
 
     /**
+     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "auth-token"})
+     */
+    private $firstname;
+
+    /**
+     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "auth-token"})
+     */
+    private $flastname;
+
+    /**
+     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "auth-token"})
+     */
+    private $address;
+
+    /**
+     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "auth-token"})
+     */
+    private $phone;
+
+    /**
      * Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $password;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     * @Groups({"user", "auth-token"})
+     */
+    private $email;
 
     private $plainPassword;
 
@@ -311,4 +348,83 @@ class User implements UserInterface, \Serializable
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getFirstname()
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @param mixed $firstname
+     */
+    public function setFirstname($firstname)
+    {
+        $this->firstname = $firstname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFlastname()
+    {
+        return $this->flastname;
+    }
+
+    /**
+     * @param mixed $flastname
+     */
+    public function setFlastname($flastname)
+    {
+        $this->flastname = $flastname;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @param mixed $address
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param string|null $email
+     */
+    public function setEmail(string $email)
+    {
+        $this->email = $email;
+    }
 }

@@ -5,13 +5,21 @@ security:
             entity:
                 class: App\Entity\User
                 property: username
+        auth_token_user_provider:
+            id: App\Security\AuthTokenUserProvider
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-#            provider: users_in_memory
+            pattern: ^/
+            stateless: true
+            simple_preauth:
+                authenticator: App\Security\AuthTokenAuthenticator
+            provider: auth_token_user_provider
+            anonymous: ~
+
             logout:
                 path: /logout
                 target: /

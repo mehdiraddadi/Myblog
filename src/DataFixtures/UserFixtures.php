@@ -27,6 +27,11 @@ class UserFixtures extends Fixture
         $user = new User();
         $user->setUsername('mradadi');
         $user->setPassword($this->encoder->encodePassword($user, 'demo'));
+        $user->setFirstname("mehdi");
+        $user->setFlastname("radadi");
+        $user->setAddress("30 avenue generale de gaulle rosny sous bois 93110");
+        $user->setPhone('+3362167428342');
+        $user->setEmail('mehdi.radadi@gmail.com');
 
         $formation = new Formation();
         $formation->setName('Diplome ingenieur informatique');
