@@ -16,13 +16,13 @@ class Competance
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"competance", "auth-token"})
+     * @Groups({"competance", "auth-token", "user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"competance", "auth-token"})
+     * @Groups({"competance", "auth-token", "user"})
      */
     private $name;
 

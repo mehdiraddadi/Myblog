@@ -1,10 +1,10 @@
 security:
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        from_database:
-            entity:
-                class: App\Entity\User
-                property: username
+#        from_database:
+#            entity:
+#                class: App\Entity\User
+#                property: username
         auth_token_user_provider:
             id: App\Security\AuthTokenUserProvider
 
@@ -13,10 +13,10 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            pattern: ^/
+            pattern: ^/api
             stateless: true
             simple_preauth:
-                authenticator: App\Security\AuthTokenAuthenticator
+                authenticator: auth_token_authenticator
             provider: auth_token_user_provider
             anonymous: ~
 

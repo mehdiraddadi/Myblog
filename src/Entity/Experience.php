@@ -15,31 +15,31 @@ class Experience
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"exprience", "auth-token"})
+     * @Groups({"exprience", "auth-token", "user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"exprience", "auth-token"})
+     * @Groups({"exprience", "auth-token", "user"})
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"exprience", "auth-token"})
+     * @Groups({"exprience", "auth-token", "user"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"exprience", "auth-token"})
+     * @Groups({"exprience", "auth-token", "user"})
      */
     private $start_date;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @Groups({"exprience", "auth-token"})
+     * @Groups({"exprience", "auth-token", "user"})
      */
     private $end_date;
 

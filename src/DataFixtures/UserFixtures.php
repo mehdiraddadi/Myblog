@@ -32,6 +32,7 @@ class UserFixtures extends Fixture
         $user->setAddress("30 avenue generale de gaulle rosny sous bois 93110");
         $user->setPhone('+3362167428342');
         $user->setEmail('mehdi.radadi@gmail.com');
+        $user->setRoles('ROLE_CONSULTANT');
 
         $formation = new Formation();
         $formation->setName('Diplome ingenieur informatique');

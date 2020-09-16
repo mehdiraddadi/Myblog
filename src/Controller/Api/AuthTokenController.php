@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 use App\Entity\AuthToken;
 use App\Entity\Credentials;
 use App\Form\Type\CredentialsType;
+use App\Repository\AuthTokenRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -26,6 +27,11 @@ class AuthTokenController extends AbstractFOSRestController
     private $userRepository;
 
     /**
+     * @var AuthTokenRepository
+     */
+    private $authTokenRepository;
+
+    /**
      * @var EntityManagerInterface
      */
     private $em;
@@ -37,12 +43,15 @@ class AuthTokenController extends AbstractFOSRestController
      * @param UserRepository $repository
      * @param EntityManagerInterface $em
      */
-    public function __construct(UserRepository $repository, EntityManagerInterface $em,
+    public function __construct(UserRepository $repository,
+                                AuthTokenRepository $authTokenRepository,
+                                EntityManagerInterface $em,
                                 UserPasswordEncoderInterface $encoder)
     {
-        $this->userRepository = $repository;
-        $this->em = $em;
-        $this->encoder = $encoder;
+        $this->userRepository      = $repository;
+        $this->authTokenRepository = $authTokenRepository;
+        $this->em                  = $em;
+        $this->encoder             = $encoder;
     }
 
     /**
@@ -69,6 +78,14 @@ class AuthTokenController extends AbstractFOSRestController
             return $this->invalidCredentials();
         }
 
+        $lastAuthToken = $this->authTokenRepository->findOneByUser($user);
+        if($lastAuthToken) {
+            $lastAuthToken->setValue(base64_encode(random_bytes(50)));
+            $lastAuthToken->setCreatedAt(new \DateTime('now'));
+            $this->em->flush();
+            return $lastAuthToken;
+        }
+
         $authToken = new AuthToken();
         $authToken->setValue(base64_encode(random_bytes(50)));
         $authToken->setCreatedAt(new \DateTime('now'));
@@ -78,6 +95,27 @@ class AuthTokenController extends AbstractFOSRestController
         $this->em->flush();
 
         return $authToken;
+    }
+
+    /**
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
+     * @Rest\Delete("/auth-tokens/{id}")
+     */
+    public function removeAuthTokenAction(Request $request)
+    {
+        $em = $this->get('doctrine.orm.entity_manager');
+        $authToken = $em->getRepository('AppBundle:AuthToken')
+            ->find($request->get('id'));
+        /* @var $authToken AuthToken */
+
+        $connectedUser = $this->get('security.token_storage')->getToken()->getUser();
+
+        if ($authToken && $authToken->getUser()->getId() === $connectedUser->getId()) {
+            $em->remove($authToken);
+            $em->flush();
+        } else {
+            throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException();
+        }
     }
 
     /**

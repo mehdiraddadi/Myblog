@@ -1,6 +1,7 @@
 <?php
 namespace App\Security;
 
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -28,7 +29,6 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
 
     public function createToken(Request $request, $providerKey)
     {
-
         $targetUrl = '/api/auth-tokens/login';
         // Si la requête est une création de token, aucune vérification n'est effectuée
         if ($request->getMethod() === "POST" && $this->httpUtils->checkRequestPath($request, $targetUrl)) {
@@ -38,7 +38,8 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
         $authTokenHeader = $request->headers->get('X-Auth-Token');
 
         if (!$authTokenHeader) {
-            throw new BadCredentialsException('X-Auth-Token header is required');
+            throw new Exception('X-Auth-Token header is required');
+//            throw new BadCredentialsException('X-Auth-Token header is required');
         }
 
         return new PreAuthenticatedToken(
@@ -61,8 +62,9 @@ class AuthTokenAuthenticator implements SimplePreAuthenticatorInterface, Authent
 
         $authTokenHeader = $token->getCredentials();
         $authToken = $userProvider->getAuthToken($authTokenHeader);
-
         if (!$authToken || !$this->isTokenValid($authToken)) {
+
+            throw new Exception('Invalid authentication token');
             throw new BadCredentialsException('Invalid authentication token');
         }
 

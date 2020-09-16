@@ -15,25 +15,25 @@ class Formation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"formation", "auth-token"})
+     * @Groups({"formation", "auth-token", "user"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"formation", "auth-token"})
+     * @Groups({"formation", "auth-token", "user"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"formation", "auth-token"})
+     * @Groups({"formation", "auth-token", "user"})
      */
     private $establishment;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"formation", "auth-token"})
+     * @Groups({"formation", "auth-token", "user"})
      */
     private $dateObtained;
 

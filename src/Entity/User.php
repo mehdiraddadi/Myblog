@@ -108,6 +108,12 @@ class User implements UserInterface, \Serializable
      */
     private $competances;
 
+    /**
+     * @ORM\Column(type="json")
+     * @Groups({"user", "auth-token"})
+     */
+    private $roles = [];
+
     public function __construct()
     {
         $this->created_at  = new \DateTime();
@@ -127,7 +133,19 @@ class User implements UserInterface, \Serializable
 
     public function getRoles(): ?array
     {
-        return ['ROLE_ADMIN'];
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
+    }
+
+    public function setRoles(string $role): self
+    {
+        $roles = $this->roles;
+        $roles[] = $role;
+        $this->roles = array_unique($roles);
+
+        return $this;
     }
 
     public function getPassword(): ?String
