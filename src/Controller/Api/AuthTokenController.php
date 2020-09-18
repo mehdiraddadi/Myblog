@@ -80,14 +80,14 @@ class AuthTokenController extends AbstractFOSRestController
 
         $lastAuthToken = $this->authTokenRepository->findOneByUser($user);
         if($lastAuthToken) {
-            $lastAuthToken->setValue(base64_encode(random_bytes(50)));
+            $lastAuthToken->setToken(base64_encode(random_bytes(50)));
             $lastAuthToken->setCreatedAt(new \DateTime('now'));
             $this->em->flush();
             return $lastAuthToken;
         }
 
         $authToken = new AuthToken();
-        $authToken->setValue(base64_encode(random_bytes(50)));
+        $authToken->setToken(base64_encode(random_bytes(50)));
         $authToken->setCreatedAt(new \DateTime('now'));
         $authToken->setUser($user);
 

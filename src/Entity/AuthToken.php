@@ -8,7 +8,7 @@ use App\Repository\AuthTokenRepository;
 /**
  * @ORM\Entity(repositoryClass=AuthTokenRepository::class)
  * @ORM\Table(name="auth_tokens",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="auth_tokens_value_unique", columns={"value"})}
+ *      uniqueConstraints={@ORM\UniqueConstraint(name="auth_tokens_value_unique", columns={"token"})}
  * )
  */
 class AuthToken
@@ -25,7 +25,7 @@ class AuthToken
      * @ORM\Column(type="string")
      * @Groups({"auth-token"})
      */
-    protected $value;
+    protected $token;
 
     /**
      * @ORM\Column(type="datetime")
@@ -52,14 +52,14 @@ class AuthToken
         $this->id = $id;
     }
 
-    public function getValue()
+    public function getToken()
     {
-        return $this->value;
+        return $this->token;
     }
 
-    public function setValue($value)
+    public function setToken($token)
     {
-        $this->value = $value;
+        $this->token = $token;
     }
 
     public function getCreatedAt()
