@@ -6,14 +6,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Class User
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity("username")
+ * @Vich\Uploadable()
  */
 class User implements UserInterface, \Serializable
 {
@@ -25,6 +29,22 @@ class User implements UserInterface, \Serializable
      * @Groups({"user", "auth-token"})
      */
     private $id;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user", "auth-token"})
+     */
+    private $imageName;
+
+    /**
+     * @var File|null
+     * @Assert\Image(
+     *     mimeTypes="image/jpeg"
+     * )
+     * @Vich\UploadableField(mapping="users_images", fileNameProperty="filename")
+     */
+    private $imageFile;
 
     /**
      * @Assert\NotBlank
@@ -57,7 +77,6 @@ class User implements UserInterface, \Serializable
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
-     * @Groups({"user", "auth-token"})
      */
     private $phone;
 
@@ -461,6 +480,45 @@ class User implements UserInterface, \Serializable
     {
         $this->profession = $profession;
 
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getImageName(): ?string
+    {
+        return $this->imageName;
+    }
+
+    /**
+     * @param mixed $imageName
+     */
+    public function setImageName($imageName): User
+    {
+        $this->imageName = $imageName;
+        return $this;
+    }
+
+
+    /**
+     * @return null|File
+     */
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    /**
+     * @param null|File $imageFile
+     * @return Property
+     */
+    public function setImageFile(?File $imageFile): User
+    {
+        $this->imageFile = $imageFile;
+        if ($this->imageFile instanceof UploadedFile) {
+            $this->updated_at = new \DateTime('now');
+        }
         return $this;
     }
 }
