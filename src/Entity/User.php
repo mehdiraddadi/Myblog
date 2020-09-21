@@ -45,7 +45,7 @@ class User implements UserInterface, \Serializable
      * @ORM\Column(type="string", length=255)
      * @Groups({"user", "auth-token"})
      */
-    private $flastname;
+    private $lastname;
 
     /**
      * @Assert\NotBlank
@@ -113,6 +113,12 @@ class User implements UserInterface, \Serializable
      * @Groups({"user", "auth-token"})
      */
     private $roles = [];
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user", "auth-token"})
+     */
+    private $profession;
 
     public function __construct()
     {
@@ -385,17 +391,17 @@ class User implements UserInterface, \Serializable
     /**
      * @return mixed
      */
-    public function getFlastname()
+    public function getlastname()
     {
-        return $this->flastname;
+        return $this->lastname;
     }
 
     /**
-     * @param mixed $flastname
+     * @param mixed $lastname
      */
-    public function setFlastname($flastname)
+    public function setlastname($lastname)
     {
-        $this->flastname = $flastname;
+        $this->lastname = $lastname;
     }
 
     /**
@@ -444,5 +450,17 @@ class User implements UserInterface, \Serializable
     public function setEmail(string $email)
     {
         $this->email = $email;
+    }
+
+    public function getProfession(): ?string
+    {
+        return $this->profession;
+    }
+
+    public function setProfession(?string $profession): self
+    {
+        $this->profession = $profession;
+
+        return $this;
     }
 }
