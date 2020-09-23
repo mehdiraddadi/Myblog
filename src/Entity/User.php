@@ -31,22 +31,6 @@ class User implements UserInterface, \Serializable
     private $id;
 
     /**
-     * @var string|null
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"user", "auth-token"})
-     */
-    private $imageName;
-
-    /**
-     * @var File|null
-     * @Assert\Image(
-     *     mimeTypes="image/jpeg"
-     * )
-     * @Vich\UploadableField(mapping="users_images", fileNameProperty="filename")
-     */
-    private $imageFile;
-
-    /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      * @Groups({"user", "auth-token"})
@@ -86,14 +70,14 @@ class User implements UserInterface, \Serializable
      */
     private $password;
 
-    /**
-     * @var string|null
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank()
-     * @Assert\Email()
-     * @Groups({"user", "auth-token"})
-     */
-    private $email;
+//    /**
+//     * @var string|null
+//     * @ORM\Column(type="string", length=255)
+//     * @Assert\NotBlank()
+//     * @Assert\Email()
+//     * @Groups({"user", "auth-token"})
+//     */
+//    private $email;
 
     private $plainPassword;
 
@@ -138,6 +122,18 @@ class User implements UserInterface, \Serializable
      * @Groups({"user", "auth-token"})
      */
     private $profession;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"user", "auth-token"})
+     */
+    private $filename;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="users_images", fileNameProperty="filename")
+     */
+    private $imageFile;
 
     public function __construct()
     {
@@ -484,24 +480,6 @@ class User implements UserInterface, \Serializable
     }
 
     /**
-     * @return null|string
-     */
-    public function getImageName(): ?string
-    {
-        return $this->imageName;
-    }
-
-    /**
-     * @param mixed $imageName
-     */
-    public function setImageName($imageName): User
-    {
-        $this->imageName = $imageName;
-        return $this;
-    }
-
-
-    /**
      * @return null|File
      */
     public function getImageFile(): ?File
@@ -519,6 +497,18 @@ class User implements UserInterface, \Serializable
         if ($this->imageFile instanceof UploadedFile) {
             $this->updated_at = new \DateTime('now');
         }
+        return $this;
+    }
+
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    public function setFilename(?string $filename): self
+    {
+        $this->filename = $filename;
+
         return $this;
     }
 }

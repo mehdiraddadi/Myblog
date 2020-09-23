@@ -12,3 +12,4 @@
 /docker/nginx/logs
 
 ###< symfony/framework-bundle ###
+/public/uploads/users/
