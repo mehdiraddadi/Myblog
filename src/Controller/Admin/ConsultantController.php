@@ -9,12 +9,14 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Vich\UploaderBundle\Exception\NoFileFoundException;
 
 /**
  * @Route("/api")
@@ -67,15 +69,15 @@ class ConsultantController extends AbstractFOSRestController
             $message = 'User not found!';
             $this->getMessage($message);
         }
-        $oldImage = $user->getFilename();
-        if($oldImage) {
-            if(file_exists($this->getParameter('images_directory').'/'.$oldImage)) {
-                unlink($this->getParameter('images_directory').'/'.$oldImage);
-            }
-        }
-        $imageFile = $request->files->get('imageFile');
 
+        $imageFile = $request->files->get('imageFile');
         if($imageFile && $imageFile instanceof UploadedFile) {
+            $oldImage = $user->getFilename();
+            if($oldImage) {
+                if(file_exists($this->getParameter('images_directory').'/'.$oldImage)) {
+                    unlink($this->getParameter('images_directory').'/'.$oldImage);
+                }
+            }
             $originalFilename = pathinfo($imageFile->getClientOriginalName(), PATHINFO_FILENAME);
             $newFilename = $user->getFirstname().'-'.$user->getlastname().'.'.$imageFile->guessExtension();
             // Move the file to the directory where brochures are stored
@@ -89,9 +91,9 @@ class ConsultantController extends AbstractFOSRestController
             }
             $user->setFilename($newFilename);
             $this->em->flush();
+            return $this->getMessage($newFilename, Response::HTTP_OK);
         }
-
-        return $this->getMessage('Image Uploaded', Response::HTTP_OK);
+        throw new NoFileFoundException('Image is required!');
     }
 
 
