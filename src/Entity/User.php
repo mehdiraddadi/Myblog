@@ -61,6 +61,7 @@ class User implements UserInterface, \Serializable
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
+     * @Groups({"user", "auth-token"})
      */
     private $phone;
 
@@ -134,6 +135,12 @@ class User implements UserInterface, \Serializable
      * @Vich\UploadableField(mapping="users_images", fileNameProperty="filename")
      */
     private $imageFile;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Groups({"user", "auth-token"})
+     */
+    private $objectif;
 
     public function __construct()
     {
@@ -508,6 +515,18 @@ class User implements UserInterface, \Serializable
     public function setFilename(?string $filename): self
     {
         $this->filename = $filename;
+
+        return $this;
+    }
+
+    public function getObjectif(): ?string
+    {
+        return $this->objectif;
+    }
+
+    public function setObjectif(?string $objectif): self
+    {
+        $this->objectif = $objectif;
 
         return $this;
     }

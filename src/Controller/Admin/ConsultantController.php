@@ -3,8 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-use App\Form\Type\UserFormTYpe;
-use App\Form\Type\UserType;
+use App\Form\Type\UserFormType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -67,7 +66,7 @@ class ConsultantController extends AbstractFOSRestController
         $user = $this->getUser();
         if(!$user) {
             $message = 'User not found!';
-            $this->getMessage($message);
+            $this->getMessage($message, Response::HTTP_NOT_FOUND);
         }
 
         $imageFile = $request->files->get('imageFile');
@@ -99,5 +98,33 @@ class ConsultantController extends AbstractFOSRestController
 
     private function getMessage($message, int $code) {
         return \FOS\RestBundle\View\View::create(['message' => $message, 'statusCode' => $code], $code);
+    }
+
+
+    /**
+     * @param Request $request
+     * @IsGranted("ROLE_CONSULTANT")
+     * @Rest\View(statusCode=Response::HTTP_CREATED, serializerGroups={"user"})
+     * @Rest\Post("/admin/users/edit_infos")
+     * @return View
+     */
+    public function EditInfosProfile(Request $request)
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(UserFormType::class, $user);
+
+        $form->submit($request->request->all());
+        if(!$user) {
+            $message = 'User not found!';
+            $this->getMessage($message, Response::HTTP_NOT_FOUND);
+        }
+
+        if(!$form->isValid()) {
+            return $form;
+        }
+
+        $this->em->flush();
+
+        return $user;
     }
 }
