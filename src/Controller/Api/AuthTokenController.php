@@ -103,16 +103,16 @@ class AuthTokenController extends AbstractFOSRestController
      */
     public function removeAuthTokenAction(Request $request)
     {
-        $em = $this->get('doctrine.orm.entity_manager');
-        $authToken = $em->getRepository('AppBundle:AuthToken')
+        $authToken = $this->em->getRepository(AuthToken::class)
             ->find($request->get('id'));
         /* @var $authToken AuthToken */
 
-        $connectedUser = $this->get('security.token_storage')->getToken()->getUser();
+        $connectedUser = $this->getUser();
 
         if ($authToken && $authToken->getUser()->getId() === $connectedUser->getId()) {
-            $em->remove($authToken);
-            $em->flush();
+            $this->em->remove($authToken);
+            $this->em->flush();
+            return \FOS\RestBundle\View\View::create(['message' => 'Logout'], Response::HTTP_NO_CONTENT);
         } else {
             throw new \Symfony\Component\HttpKernel\Exception\BadRequestHttpException();
         }
