@@ -65,8 +65,7 @@ class ConsultantController extends AbstractFOSRestController
     {
         $user = $this->getUser();
         if(!$user) {
-            $message = 'User not found!';
-            $this->getMessage($message, Response::HTTP_NOT_FOUND);
+            $this->getMessage('User not found!', Response::HTTP_NOT_FOUND);
         }
 
         $imageFile = $request->files->get('imageFile');

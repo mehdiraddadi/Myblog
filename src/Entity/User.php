@@ -71,14 +71,14 @@ class User implements UserInterface, \Serializable
      */
     private $password;
 
-//    /**
-//     * @var string|null
-//     * @ORM\Column(type="string", length=255)
-//     * @Assert\NotBlank()
-//     * @Assert\Email()
-//     * @Groups({"user", "auth-token"})
-//     */
-//    private $email;
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Email()
+     * @Groups({"user", "auth-token"})
+     */
+    private $email;
 
     private $plainPassword;
 

@@ -47,4 +47,17 @@ class FormationRepository extends ServiceEntityRepository
         ;
     }
     */
+
+
+    public function getOneById ($id)
+    {
+        $query = $this->_em ->createQuery(
+            'SELECT f, u
+        FROM App\Entity\Formation f
+        INNER JOIN f.user u
+        WHERE f.id = :id'
+        )->setParameter('id', $id);
+
+        return $query->getOneOrNullResult();
+    }
 }

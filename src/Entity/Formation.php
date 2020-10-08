@@ -77,9 +77,9 @@ class Formation
         return $this->dateObtained;
     }
 
-    public function setDateObtained(\DateTimeInterface $dateObtained): self
+    public function setDateObtained(string $dateObtained): self
     {
-        $this->dateObtained = $dateObtained;
+        $this->dateObtained = new \DateTime($dateObtained);
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller\Profile;
 
 use App\Entity\User;
+use App\Form\Type\FormationFormType;
 use App\Form\Type\UserFormType;
 use App\Repository\FormationRepository;
 use App\Repository\UserRepository;
@@ -58,8 +59,19 @@ class FormationController extends AbstractFOSRestController
     public function EditInfosProfile(string $id, Request $request)
     {
         $user = $this->getUser();
-        $form = $this->createForm(UserFormType::class, $user);
+        if(!$user) {
+            $this->getMessage('User not found!', Response::HTTP_NOT_FOUND);
+        }
+        $formation = $this->formationRepository->getOneById($id);
 
-        var_dump($id);die;
+        $form = $this->createForm(FormationFormType::class, $formation);
+        $form->handleRequest($request);
+        $form->submit($request->request->all());
+        if(!$form->isValid()) {
+            return $form;
+        }
+
+        $this->em->flush();
+        return $formation;
     }
 }
